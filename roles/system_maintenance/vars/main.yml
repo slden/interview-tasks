@@ -1,0 +1,6 @@
+---
+system_maintenance_packages:
+  - htop
+  - ncdu
+  - git
+  - nano
