@@ -1,3 +1,5 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# handlers file for ssh
+- name: Restart sshd
+  ansible.builtin.systemd:
+    name: sshd
+    state: restarted

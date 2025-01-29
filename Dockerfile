@@ -10,9 +10,7 @@ RUN usermod -aG sudo ubuntu
 # Создаем директорию для корректной работы sshd в контейнере
 RUN mkdir -p /run/sshd
 # Правим shhd.conf для возможности подключения по паролю
-#RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-
 
 EXPOSE 80 22
 

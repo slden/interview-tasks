@@ -1,2 +1,28 @@
 ---
+- name: Disable root login
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PermitRootLogin' # regex c учетом '#'' в начале строки
+    line: 'PermitRootLogin no'
+    state: present
 
+- name: Disable empty passwords
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PermitEmptyPasswords'
+    line: 'PermitEmptyPasswords no'
+    state: present
+
+- name: Change LogLevel to VERBOSE
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#LogLevel'
+    line: 'LogLevel VERBOSE'
+    state: present
+
+- name: Disable X11Forwarding
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^X11Forwarding' # regex без '#'' в начале строки
+    line: 'X11Forwarding no'
+    state: present
