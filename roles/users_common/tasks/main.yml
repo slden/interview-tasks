@@ -1,0 +1,32 @@
+---
+- name: Create or delete users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    shell: "{{ item.shell }}"
+    groups: "{{ item.groups }}"
+    append: true # Добавление групп, без удаления существующих для пользователя
+  loop: "{{ users_common_users }}"
+  when: item.state in ['present', 'absent']
+  become: true
+
+- name: Add public keys to authorized_keys
+  ansible.builtin.copy:
+    dest: "/home/{{ item.name }}/.ssh/authorized_keys"
+    content: "{{ item.pubkey }}"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0600" # Права для владельца
+  loop: "{{ users_common_users }}"
+  when: item.state == 'present'
+  become: true
+
+- name: Add password to user
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    password: "{{ user_passwords[item.name] }}"
+  vars_files:
+    - vault_vars.yml
+  loop: "{{ users_common_users }}"
+  when: item.state == 'present'
+  become: true

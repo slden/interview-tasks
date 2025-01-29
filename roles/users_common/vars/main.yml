@@ -1,0 +1,19 @@
+---
+users_common_users:
+  - name: "user1"
+    state: "present"
+    shell: "/bin/bash"
+    pubkey: "ssh ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHZlZy1tYW4tY2hhbGxlbmdlLWJhc2U2NC1lbmNvZGluZy1zZWNyZXQ= user1"
+    groups: "sudo, docker"
+
+  - name: "user2"
+    state: "absent"
+    shell: "/bin/zsh"
+    pubkey: "ssh ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHZlZy1tYW4tY2hhbGxlbmdlLWJhc2U2NC1lbmNvZGluZy1zZWNyZXQ= user2"
+    groups: "video"
+
+  - name: "user3"
+    state: "present"
+    shell: "/bin/bash"
+    pubkey: "ssh ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHZlZy1tYW4tY2hhbGxlbmdlLWJhc2U2NC1lbmNvZGluZy1zZWNyZXQ= user2"
+    groups: "news, audio"

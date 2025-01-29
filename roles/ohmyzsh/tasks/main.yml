@@ -1,0 +1,22 @@
+---
+- name: Include vars from users_common role
+  ansible.builtin.include_vars:
+    file: "../../users_common/vars/main.yml"
+
+
+- name: Download  ohmyzsh
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+    dest: "/tmp/install.sh"
+    mode: '0755' # Выставляем права чтобы не ругался линтер
+
+- name: Install ohmyzsh
+  ansible.builtin.command:
+    cmd: "sh /tmp/install.sh"
+    creates: "/home/{{ item.name }}/.oh-my-zsh" # Для идемпотентности
+  become: true
+  become_user: "{{ item.name }}"
+  loop: "{{ users_common_users }}"
+  when: item.shell == "/bin/zsh"
+  environment:
+    HOME: "/home/{{ item.name }}"
