@@ -4,3 +4,5 @@ services:
     ports:
       - "2222:22"
       - "80:80"
+    volumes:
+    - ./images:/tmp/images  

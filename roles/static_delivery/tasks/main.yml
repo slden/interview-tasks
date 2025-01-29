@@ -1,0 +1,12 @@
+---
+- name: Dowlnoad static files
+  ansible.builtin.get_url:
+    url: "{{ item }}"
+    dest: "../../../images/"
+  mode: '0644'
+  loop: "{{ static_delivery_url }}"
+
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
