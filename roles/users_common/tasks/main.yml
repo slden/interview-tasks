@@ -24,9 +24,7 @@
 - name: Add password to user
   ansible.builtin.user:
     name: "{{ item.name }}"
-    password: "{{ user_passwords[item.name] }}"
-  vars_files:
-    - vault_vars.yml
+    password: "{{ item.password }}"
   loop: "{{ users_common_users }}"
   when: item.state == 'present'
   become: true

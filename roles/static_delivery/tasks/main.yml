@@ -1,9 +1,9 @@
 ---
-- name: Dowlnoad static files
+- name: Download static files
   ansible.builtin.get_url:
     url: "{{ item }}"
     dest: "../../../images/"
-  mode: '0644'
+    mode: '0777'
   loop: "{{ static_delivery_url }}"
 
 - name: Reload nginx

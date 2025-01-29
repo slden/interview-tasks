@@ -1,0 +1,10 @@
+- name: Setup static server
+  hosts: all
+  roles:
+    - role: users_common
+    - role: ohmyzsh
+    - role: ssh
+      become: true # Пришлось указывать на уровне плейбука, потому что линтер ругается на использование become внутри роли, из-за модуля lineinfile
+    - role: system_maintenance
+    - role: nginx
+    - role: static_delivery
