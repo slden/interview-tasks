@@ -28,9 +28,9 @@ http {
         listen 80;
         server_name _;        
         location /images {
-            alias /tmp;
+            alias /tmp/images;
             expires 1h;
-            add_header Cache-Control "public", max-age=3600;
+            add_header Cache-Control "public, max-age=3600";
             autoindex on;
         }
     }

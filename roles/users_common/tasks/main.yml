@@ -1,4 +1,11 @@
 ---
+- name: Ensure required groups exist
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ users_common_users | map(attribute='groups') | flatten | unique }}"
+  become: true
+
 - name: Create or delete users
   ansible.builtin.user:
     name: "{{ item.name }}"
@@ -6,8 +13,20 @@
     shell: "{{ item.shell }}"
     groups: "{{ item.groups }}"
     append: true # Добавление групп, без удаления существующих для пользователя
+    create_home: true
   loop: "{{ users_common_users }}"
   when: item.state in ['present', 'absent']
+  become: true
+
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0700"
+  loop: "{{ users_common_users }}"
+  when: item.state == "present"
   become: true
 
 - name: Add public keys to authorized_keys

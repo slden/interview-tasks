@@ -3,20 +3,38 @@
   ansible.builtin.include_vars:
     file: "../../users_common/vars/main.yml"
 
-
 - name: Download  ohmyzsh
   ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+    url: "https://github.com/deluan/zsh-in-docker/releases/download/v1.2.1/zsh-in-docker.sh"
     dest: "/tmp/install.sh"
     mode: '0755' # Выставляем права чтобы не ругался линтер
 
 - name: Install ohmyzsh
   ansible.builtin.command:
-    cmd: "sh /tmp/install.sh"
-    creates: "/home/{{ item.name }}/.oh-my-zsh" # Для идемпотентности
-  become: true
-  become_user: "{{ item.name }}"
+    cmd: "sh /tmp/install.sh -x"
+    creates: "/home/ubuntu/.oh-my-zsh" # Для идемпотентности
+
+- name: Create ohmyzsh-symlink for each user
+  ansible.builtin.file:
+    src: "/home/ubuntu/.oh-my-zsh"
+    dest: "/home/{{ item.name }}/.oh-my-zsh"
+    state: link
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0755"
   loop: "{{ users_common_users }}"
   when: item.shell == "/bin/zsh"
-  environment:
-    HOME: "/home/{{ item.name }}"
+  become: true
+
+- name: Create zshrc-symlink for each user
+  ansible.builtin.file:
+    src: "/home/ubuntu/.zshrc"
+    dest: "/home/{{ item.name }}/.zshrc"
+    state: link
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0755"
+  loop: "{{ users_common_users }}"
+  when: item.shell == "/bin/zsh"
+  become: true
+
